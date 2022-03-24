@@ -38,10 +38,7 @@ public class MainController {
 
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
-        File f = new File(this.getClass().getResource("/").getPath());
-        System.out.println(f);
-        Path path = Paths.get(f.getPath());
-        System.out.println(path.getParent().getParent());
+
         Iterable<Message> messages = messageRepo.findAll();
         if (filter != null && !filter.isEmpty()) {
             messages = messageRepo.findByTag(filter);
@@ -63,17 +60,22 @@ public class MainController {
         Message message = new Message(text, tag, user);
 
 
+        File f = new File(this.getClass().getResource("/").getPath());
+        Path path1 = Paths.get(f.getPath());
+        String path2 = path1.getParent().getParent().toString();
+        Path path3 = Paths.get(path2.toString() + "/uploads/");
+        File f2 = new File(path3.toString());
 
         if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
 
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
+            if (!f2.exists()) {
+                f2.mkdir();
             }
 
             String uuidFile = UUID.randomUUID().toString();
             String resultFilename = uuidFile + file.getOriginalFilename();
-            Path path = Paths.get(uploadPath);
+            Path path = Paths.get(f2.getPath());
             Files.copy(file.getInputStream(), path.resolve(resultFilename));
 
             message.setFilename(resultFilename);
