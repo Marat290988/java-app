@@ -19,7 +19,6 @@ public class User implements UserDetails {
     private String username;
     @NotBlank(message = "Password cannot be empty")
     private String password;
-    @Transient //не будет сохранять в БД
     private boolean active;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER) //Роли хранятся в отдельной табле и EAGER быстрая подгрузка
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id")) //название таблицы, название столбца для объединения с юзер
