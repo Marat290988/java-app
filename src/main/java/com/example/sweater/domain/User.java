@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,8 +44,40 @@ public class User implements UserDetails {
     private String email;
     private String activationCode;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscription",
+            joinColumns = { @JoinColumn(name = "channel_id") },
+            inverseJoinColumns = { @JoinColumn(name = "subscriber_id") }
+    )
+    private Set<User> subscribers = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscription",
+            joinColumns = { @JoinColumn(name = "subscriber_id") },
+            inverseJoinColumns = { @JoinColumn(name = "channel_id") }
+    )
+    private Set<User> subsriptions = new HashSet<>();
+
     public String getEmail() {
         return email;
+    }
+
+    public Set<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(Set<User> subscribers) {
+        this.subscribers = subscribers;
+    }
+
+    public Set<User> getSubsriptions() {
+        return subsriptions;
+    }
+
+    public void setSubsriptions(Set<User> subsriptions) {
+        this.subsriptions = subsriptions;
     }
 
     public void setEmail(String email) {
